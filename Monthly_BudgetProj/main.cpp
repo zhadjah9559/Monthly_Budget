@@ -17,6 +17,7 @@ budget.
  * getMonthlyReport()  
 ==============================================================================*/
 #include <cstdlib>
+#include <limits>
 #include <iostream>
 #include <iomanip> 
 #include <string>
@@ -24,8 +25,6 @@ budget.
 #include <cmath>
 #include <cctype>
 using namespace std;
-
-
 
 struct MonthlyBudget
 {
@@ -39,6 +38,7 @@ struct MonthlyBudget
     double entertainment;
     double clothinng;
     double misc;
+    double total;
 };
 
 struct MonthlyExpenses
@@ -53,6 +53,7 @@ struct MonthlyExpenses
     double entertainmentEx;
     double clothinngEx;
     double miscEx;
+    double total;
 };
 
 //prototypes declared outside of main so main function logic isn't distorted
@@ -102,6 +103,15 @@ void getMonths(int& months)
 {
     cout<<"How many months would you like to have analyzed? ";
     cin>>months;  
+    
+    while(cin.fail())
+    {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(),'\n');
+        cout << "Enter valid input ";
+        cin >> months;
+    }
+
 }
 
 /**
@@ -112,38 +122,60 @@ void getMonths(int& months)
 void getMonthlyBudget(fstream& budgetFile, int months)
 {
     MonthlyBudget mb;
-
+    int count = 1;
+    
     budgetFile.open("budget.bin", ios::out|ios::binary);
     if(budgetFile.fail())
     {
       cout<<"Could not find file: budget.bin \n";
-      system("PAUSE");
+      system("read");  //act as system("PAUSE")
     }
-    do{
-        cout<<"Enter your housing budget: \n";
-        cin>>mb.housing;
-        cout<<"Enter your utilities budget: \n";
-        cin>>mb.utilites;
-        cout<<"Enter your household expense budget: \n";
-        cin>>mb.houseHold;
-        cout<<"Enter your transportation budget: \n";
-        cin>>mb.transportation;
-        cout<<"Enter your food budget: \n";
-        cin>>mb.food;
-        cout<<"Enter your medical budget: \n";
-        cin>>mb.medical;
-        cout<<"Enter your insurance budget: \n";
-        cin>>mb.insurance;
-        cout<<"Enter your entertainment budget \n";
-        cin>>mb.entertainment;
-        cout<<"Enter your clothing budget: \n";
-        cin>>mb.clothinng;
-        cout<<"Enter your Miscellaneous budget: \n";
-        cin>>mb.misc;
+    
+    try
+    {
+        do
+        {
+            cout<<"Enter your housing budget for month "<<count<<":\n";
+            cin>>mb.housing;
+            cout<<"Enter your utilities budget for month "<<count<<":\n";
+            cin>>mb.utilites;
+            cout<<"Enter your household expense budget for month "<<count<<":\n";
+            cin>>mb.houseHold;
+            cout<<"Enter your transportation budget for month "<<count<<":\n";
+            cin>>mb.transportation;
+            cout<<"Enter your food budget for month "<<count<<":\n";
+            cin>>mb.food;
+            cout<<"Enter your medical budget for month "<<count<<":\n";
+            cin>>mb.medical;
+            cout<<"Enter your insurance budget for month "<<count<<":\n";
+            cin>>mb.insurance;
+            cout<<"Enter your entertainment budget for month "<<count<<":\n";
+            cin>>mb.entertainment;
+            cout<<"Enter your clothing budget for month "<<count<<":\n";
+            cin>>mb.clothinng;
+            cout<<"Enter your Miscellaneous budget for month "<<count<<":\n";
+            cin>>mb.misc;
 
-        budgetFile.write(reinterpret_cast<char*>(&mb),sizeof(mb));		
-        months --;
-    }while(months != 0);
+            budgetFile.write(reinterpret_cast<char*>(&mb),sizeof(mb));
+            count++;
+            months --;
+        }while(months != 0);
+    }
+    
+    catch(int)
+    {
+        cout<<"Values must be positive";
+    }
+    
+    catch(...)
+    {
+        cin.clear(); 
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
+        cout<<"Error values must be numeric.";
+    }
+    
+        
     budgetFile.close();
 }
 
@@ -155,35 +187,40 @@ void getMonthlyBudget(fstream& budgetFile, int months)
 void getMonthlyExpenses(fstream& expenseFile, int months)
 {
     MonthlyExpenses me;
+    int count = 0;
+
+    
     expenseFile.open("expenses.bin", ios::out|ios::binary);
     if(expenseFile.fail())
     {
-      cout<<"Could not open expense.bin \n";
-      system("PAUSE");
+      cout<<"Could not open expenses.bin \n";
+      system("read");
     }
     
     do{
-        cout<<"Enter your housing expenses: \n";
+        cout<<"Enter your housing expenses for month "<<count<<":\n";
         cin>>me.housingEx;
-        cout<<"Enter your utilities expenses: \n";
+        cout<<"Enter your utilities expenses for month "<<count<<":\n";
         cin>>me.utilitesEx;
-        cout<<"Enter the cost of your house hold expenses: \n";
+        cout<<"Enter the cost of your house hold expenses for month "<<count<<":\n";
         cin>>me.householdEx;
-        cout<<"Enter your transportation expenses: \n";
+        cout<<"Enter your transportation expenses for month "<<count<<":\n";
         cin>>me.transportationEx;
-        cout<<"Enter your food expenses: \n";
+        cout<<"Enter your food expenses for month "<<count<<":\n";
         cin>>me.foodEx;
-        cout<<"Enter your medical expenses: \n";
+        cout<<"Enter your medical expenses for month "<<count<<":\n";
         cin>>me.medicalEx;
-        cout<<"Enter your insurance expenses: \n";
+        cout<<"Enter your insurance expenses for month "<<count<<":\n";
         cin>>me.insuranceEx;
-        cout<<"Enter your entertainment expenses: \n";
+        cout<<"Enter your entertainment expenses for month "<<count<<":\n";
         cin>>me.entertainmentEx;
-        cout<<"Enter your clothing expenses: \n";
+        cout<<"Enter your clothing expenses for month "<<count<<":\n";
         cin>>me.clothinngEx;
-        cout<<"Enter your Miscellaneous expenses: \n";
-        cin>>me.miscEx;        
-        expenseFile.write(reinterpret_cast<char*>(&me),sizeof(me));	
+        cout<<"Enter your Miscellaneous expenses for month "<<count<<":\n";
+        cin>>me.miscEx;    
+        
+        expenseFile.write(reinterpret_cast<char*>(&me),sizeof(me));
+        count++;	
         months--;	
     }while(months!=0);
     expenseFile.close();
@@ -204,13 +241,13 @@ void getMonthlyReport(fstream& budgetFile, fstream& expenseFile, int months)
     budgetFile.open("budget.bin", ios::in|ios::binary);
     if(budgetFile.fail()){
         cout<<"Could not open budget.bin";
-        system("PAUSE");
+        system("read"); 
     }
     budgetFile.read(reinterpret_cast<char*>(&mb),sizeof(mb));
         
-    expenseFile.open("expense.bin", ios::in|ios::binary);  
+    expenseFile.open("expenses.bin", ios::in|ios::binary);  
     if(expenseFile.fail()){
-        cout<<"Could not open expense.bin (getMonthlyReport function)";
+        cout<<"Could not open expenses.bin (getMonthlyReport function)";
         system("read");
     }    
     expenseFile.read(reinterpret_cast<char*>(&me),sizeof(me));
