@@ -3,18 +3,21 @@ Zachary Hadjah                    February 9th 2018
 Junior Year                       Data Structures/ Algorithm Analysis
 
 This program tracks the user's monthly budget and their expenses in order to 
-calculate the over/under and tell the user whether they are within their
+calculate the over/under and tells the user whether they are within their
 budget.
 
  * MonthlyBudget struct consists of the budgets for certain categories
  * MonthlyExpenses struct consists of the amount of money that was spent in that
    particular category
- * getMonths() will ask the user for the number of months which they want to 
-   track their over/under
- * getMonthlyBudget() will ask the user for the amount in which they want their 
- * getMonthlyExpenses() will ask the user for the dollar amounts in which they 
-   spent money
- * getMonthlyReport()  
+ * getMonths() will prompt the user for the number of months for which they want
+   to keep track of
+ * getMonthlyBudget() will prompt the user for the budget amounts in seven different 
+   finance categories
+ * getMonthlyExpenses() will prompt the user for how much money they spent in the
+   seven different finance categories
+ * getMonthlyReport()  will display the information in a tabular format and tell
+   the user how much money they spent in comparison to their budget, giving them
+   an over/under amount.
 ==============================================================================*/
 #include <cstdlib>
 #include <limits>
