@@ -64,10 +64,7 @@ void getMonthlyBudget(fstream& budgetFile, int months);
 void getMonthlyExpenses(fstream& expenseFile, int months);
 void getMonthlyReport(fstream& budgetFile, fstream& expenseFile, int months);   
 
-/**
- * 
- * @return 0
- */
+
 int main() 
 {
     int months = 1;
@@ -82,9 +79,6 @@ int main()
     return 0;
 }
 
-/**
- * 
- */
 void describeProgram()
 {
     cout<<
@@ -99,12 +93,17 @@ void describeProgram()
 
 /**
  * 
- * @param months
+ * @param months will take integer input from 1 - 12 (both inclusive) 
  */
 void getMonths(int& months)
 {
     cout<<"How many months would you like to have analyzed? ";
     cin>>months;  
+    
+    while(months <=0 || months >=13)
+    {
+        cout<<"Please enter input between 1 - 12";
+    }
     
     while(cin.fail())
     {
@@ -117,9 +116,8 @@ void getMonths(int& months)
 }
 
 /**
- * 
- * @param budgetFile
- * @param months
+ * @param budgetFile will open the bugdet.bin file and write in the data members
+ *        of the MonthlyExpenses struct
  */
 void getMonthlyBudget(fstream& budgetFile, int months)
 {
@@ -130,7 +128,7 @@ void getMonthlyBudget(fstream& budgetFile, int months)
     if(budgetFile.fail())
     {
       cout<<"Could not find file: budget.bin \n";
-      system("read");  //act as system("PAUSE")
+      system("PAUSE"); 
     }
     
     try
@@ -176,9 +174,8 @@ void getMonthlyBudget(fstream& budgetFile, int months)
 }
 
 /**
- * 
- * @param expenseFile
- * @param months
+ * @param expenseFile will open the expenses.bin file and write in the data members
+ *        of the MonthlyExpenses struct
  */
 void getMonthlyExpenses(fstream& expenseFile, int months)
 {
@@ -229,23 +226,23 @@ void getMonthlyExpenses(fstream& expenseFile, int months)
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
     
         cout<<"Error, invalid input entered.";
-    }
-        
+    } 
     expenseFile.close();
 }
 
 /**
- * 
- * @param budgetFile
- * @param expenseFile
- * @param months
+ * @param budgetFile will read from the budget.bin file 
+ * @param expenseFile will read from the expenses.bin file
  */
 void getMonthlyReport(fstream& budgetFile, fstream& expenseFile, int months)
 {
     MonthlyBudget mb;
     MonthlyExpenses me;
     ofstream toFile;
-            
+    const int width1 = 14;
+    const int width2 = 11;
+       
+    
     budgetFile.open("budget.bin", ios::in|ios::binary);
     if(budgetFile.fail()){
         cout<<"Could not open budget.bin";
@@ -265,61 +262,61 @@ void getMonthlyReport(fstream& budgetFile, fstream& expenseFile, int months)
        //displaying info to screen 
        cout<<fixed<<showpoint<<setprecision(2);
        cout<<"--------------------------------------------------------------------\n";
-       cout<<left<<setw(14)<<"Category";
-       cout<<right<<setw(11)<<"Budget";
-       cout<<right<<setw(14)<<"Spent";
-       cout<<right<<setw(19)<<"   Over(-)/Under \n";
+       cout<<left<<setw(width1)<<"Category";
+       cout<<right<<setw(width2)<<"Budget";
+       cout<<right<<setw(width1)<<"Spent";
+       cout<<right<<setw(width1)<<"   Over(-)/Under \n";
        cout<<"--------------------------------------------------------------------\n";
       
-       cout<<left<<setw(14)<<"Housing";
-       cout<<right<<setw(11)<<mb.housing;
-       cout<<right<<setw(14)<<me.housingEx;
-       cout<<right<<setw(14)<<(mb.housing - me.housingEx)<<"\n";
+       cout<<left<<setw(width1)<<"Housing";
+       cout<<right<<setw(width2)<<mb.housing;
+       cout<<right<<setw(width1)<<me.housingEx;
+       cout<<right<<setw(width1)<<(mb.housing - me.housingEx)<<"\n";
        
-       cout<<left<<setw(14)<<"Utilities";
-       cout<<right<<setw(11)<<mb.utilites;
-       cout<<right<<setw(14)<<me.utilitesEx;
-       cout<<right<<setw(14)<<(mb.utilites - me.utilitesEx)<<"\n";
+       cout<<left<<setw(width1)<<"Utilities";
+       cout<<right<<setw(width2)<<mb.utilites;
+       cout<<right<<setw(width1)<<me.utilitesEx;
+       cout<<right<<setw(width1)<<(mb.utilites - me.utilitesEx)<<"\n";
        
-       cout<<left<<setw(14)<<"House Hold";
-       cout<<right<<setw(11)<<mb.houseHold;
-       cout<<right<<setw(14)<<me.householdEx;
-       cout<<right<<setw(14)<<(mb.houseHold - me.householdEx)<<"\n";
+       cout<<left<<setw(width1)<<"House Hold";
+       cout<<right<<setw(width2)<<mb.houseHold;
+       cout<<right<<setw(width1)<<me.householdEx;
+       cout<<right<<setw(width1)<<(mb.houseHold - me.householdEx)<<"\n";
        
-       cout<<left<<setw(14)<<"Transportation";
-       cout<<right<<setw(11)<<mb.transportation;
-       cout<<right<<setw(14)<<me.transportationEx;
-       cout<<right<<setw(14)<<(mb.transportation - me.transportationEx)<<"\n";
+       cout<<left<<setw(width1)<<"Transportation";
+       cout<<right<<setw(width2)<<mb.transportation;
+       cout<<right<<setw(width1)<<me.transportationEx;
+       cout<<right<<setw(width1)<<(mb.transportation - me.transportationEx)<<"\n";
                
-       cout<<left<<setw(14)<<"Food";
-       cout<<right<<setw(11)<<mb.food;
-       cout<<right<<setw(14)<<me.foodEx;
-       cout<<right<<setw(14)<<(mb.food - me.foodEx)<<"\n";
+       cout<<left<<setw(width1)<<"Food";
+       cout<<right<<setw(width2)<<mb.food;
+       cout<<right<<setw(width1)<<me.foodEx;
+       cout<<right<<setw(width1)<<(mb.food - me.foodEx)<<"\n";
        
-       cout<<left<<setw(14)<<"Medical";
-       cout<<right<<setw(11)<<mb.medical;
-       cout<<right<<setw(14)<<me.medicalEx;
-       cout<<right<<setw(14)<<(mb.medical - me.medicalEx)<<"\n";
+       cout<<left<<setw(width1)<<"Medical";
+       cout<<right<<setw(width2)<<mb.medical;
+       cout<<right<<setw(width1)<<me.medicalEx;
+       cout<<right<<setw(width1)<<(mb.medical - me.medicalEx)<<"\n";
        
-       cout<<left<<setw(14)<<"Insurance";
-       cout<<right<<setw(11)<<mb.insurance;
-       cout<<right<<setw(14)<<me.insuranceEx;
-       cout<<right<<setw(14)<<(mb.insurance - me.insuranceEx)<<"\n";
+       cout<<left<<setw(width1)<<"Insurance";
+       cout<<right<<setw(width2)<<mb.insurance;
+       cout<<right<<setw(width1)<<me.insuranceEx;
+       cout<<right<<setw(width1)<<(mb.insurance - me.insuranceEx)<<"\n";
        
-       cout<<left<<setw(14)<<"Entertainment";
-       cout<<right<<setw(11)<<mb.entertainment;
-       cout<<right<<setw(14)<<me.entertainmentEx;
-       cout<<right<<setw(14)<<(mb.entertainment - me.entertainmentEx)<<"\n";
+       cout<<left<<setw(width1)<<"Entertainment";
+       cout<<right<<setw(width2)<<mb.entertainment;
+       cout<<right<<setw(width1)<<me.entertainmentEx;
+       cout<<right<<setw(width1)<<(mb.entertainment - me.entertainmentEx)<<"\n";
        
-       cout<<left<<setw(14)<<"Clothing";
-       cout<<right<<setw(11)<<mb.clothinng;
-       cout<<right<<setw(14)<<me.clothinngEx;
-       cout<<right<<setw(14)<<(mb.clothinng - me.clothinngEx)<<"\n";
+       cout<<left<<setw(width1)<<"Clothing";
+       cout<<right<<setw(width2)<<mb.clothinng;
+       cout<<right<<setw(width1)<<me.clothinngEx;
+       cout<<right<<setw(width1)<<(mb.clothinng - me.clothinngEx)<<"\n";
        
-       cout<<left<<setw(14)<<"Miscellaneous";
-       cout<<right<<setw(11)<<mb.misc;
-       cout<<right<<setw(14)<<me.miscEx;
-       cout<<right<<setw(14)<<(mb.misc - me.miscEx)<<"\n";
+       cout<<left<<setw(width1)<<"Miscellaneous";
+       cout<<right<<setw(width2)<<mb.misc;
+       cout<<right<<setw(width1)<<me.miscEx;
+       cout<<right<<setw(width1)<<(mb.misc - me.miscEx)<<"\n";
                  
        cout<<"For the month you are over budget by $"<<
             (mb.housing + mb.utilites + mb.houseHold + mb.transportation + mb.food +
@@ -333,61 +330,61 @@ void getMonthlyReport(fstream& budgetFile, fstream& expenseFile, int months)
        toFile.open("results.txt",ios::app);
        toFile<<fixed<<showpoint<<setprecision(2);
        toFile<<"--------------------------------------------------------------------\n";
-       toFile<<left<<setw(14)<<"Category";
-       toFile<<right<<setw(11)<<"Budget";
-       toFile<<right<<setw(14)<<"Spent";
+       toFile<<left<<setw(width1)<<"Category";
+       toFile<<right<<setw(width2)<<"Budget";
+       toFile<<right<<setw(width1)<<"Spent";
        toFile<<right<<setw(19)<<"   Over(-)/Under \n";
        toFile<<"--------------------------------------------------------------------\n";
       
-       toFile<<left<<setw(14)<<"Housing";
-       toFile<<right<<setw(11)<<mb.housing;
-       toFile<<right<<setw(14)<<me.housingEx;
-       toFile<<right<<setw(14)<<(mb.housing - me.housingEx)<<"\n";
+       toFile<<left<<setw(width1)<<"Housing";
+       toFile<<right<<setw(width2)<<mb.housing;
+       toFile<<right<<setw(width1)<<me.housingEx;
+       toFile<<right<<setw(width1)<<(mb.housing - me.housingEx)<<"\n";
        
-       toFile<<left<<setw(14)<<"Utilities";
-       toFile<<right<<setw(11)<<mb.utilites;
-       toFile<<right<<setw(14)<<me.utilitesEx;
-       toFile<<right<<setw(14)<<(mb.utilites - me.utilitesEx)<<"\n";
+       toFile<<left<<setw(width1)<<"Utilities";
+       toFile<<right<<setw(width2)<<mb.utilites;
+       toFile<<right<<setw(width1)<<me.utilitesEx;
+       toFile<<right<<setw(width1)<<(mb.utilites - me.utilitesEx)<<"\n";
        
-       toFile<<left<<setw(14)<<"House Hold";
-       toFile<<right<<setw(11)<<mb.houseHold;
-       toFile<<right<<setw(14)<<me.householdEx;
-       toFile<<right<<setw(14)<<(mb.houseHold - me.householdEx)<<"\n";
+       toFile<<left<<setw(width1)<<"House Hold";
+       toFile<<right<<setw(width2)<<mb.houseHold;
+       toFile<<right<<setw(width1)<<me.householdEx;
+       toFile<<right<<setw(width1)<<(mb.houseHold - me.householdEx)<<"\n";
        
-       toFile<<left<<setw(14)<<"Transportation";
-       toFile<<right<<setw(11)<<mb.transportation;
-       toFile<<right<<setw(14)<<me.transportationEx;
-       toFile<<right<<setw(14)<<(mb.transportation - me.transportationEx)<<"\n";
+       toFile<<left<<setw(width1)<<"Transportation";
+       toFile<<right<<setw(width2)<<mb.transportation;
+       toFile<<right<<setw(width1)<<me.transportationEx;
+       toFile<<right<<setw(width1)<<(mb.transportation - me.transportationEx)<<"\n";
                
-       toFile<<left<<setw(14)<<"Food";
-       toFile<<right<<setw(11)<<mb.food;
-       toFile<<right<<setw(14)<<me.foodEx;
-       toFile<<right<<setw(14)<<(mb.food - me.foodEx)<<"\n";
+       toFile<<left<<setw(width1)<<"Food";
+       toFile<<right<<setw(width2)<<mb.food;
+       toFile<<right<<setw(width1)<<me.foodEx;
+       toFile<<right<<setw(width1)<<(mb.food - me.foodEx)<<"\n";
        
-       toFile<<left<<setw(14)<<"Medical";
-       toFile<<right<<setw(11)<<mb.medical;
-       toFile<<right<<setw(14)<<me.medicalEx;
-       toFile<<right<<setw(14)<<(mb.medical - me.medicalEx)<<"\n";
+       toFile<<left<<setw(width1)<<"Medical";
+       toFile<<right<<setw(width2)<<mb.medical;
+       toFile<<right<<setw(width1)<<me.medicalEx;
+       toFile<<right<<setw(width1)<<(mb.medical - me.medicalEx)<<"\n";
        
-       toFile<<left<<setw(14)<<"Insurance";
-       toFile<<right<<setw(11)<<mb.insurance;
-       toFile<<right<<setw(14)<<me.insuranceEx;
-       toFile<<right<<setw(14)<<(mb.insurance - me.insuranceEx)<<"\n";
+       toFile<<left<<setw(width1)<<"Insurance";
+       toFile<<right<<setw(width2)<<mb.insurance;
+       toFile<<right<<setw(width1)<<me.insuranceEx;
+       toFile<<right<<setw(width1)<<(mb.insurance - me.insuranceEx)<<"\n";
        
-       toFile<<left<<setw(14)<<"Entertainment";
-       toFile<<right<<setw(11)<<mb.entertainment;
-       toFile<<right<<setw(14)<<me.entertainmentEx;
-       toFile<<right<<setw(14)<<(mb.entertainment - me.entertainmentEx)<<"\n";
+       toFile<<left<<setw(width1)<<"Entertainment";
+       toFile<<right<<setw(width2)<<mb.entertainment;
+       toFile<<right<<setw(width1)<<me.entertainmentEx;
+       toFile<<right<<setw(width1)<<(mb.entertainment - me.entertainmentEx)<<"\n";
        
-       toFile<<left<<setw(14)<<"Clothing";
-       toFile<<right<<setw(11)<<mb.clothinng;
-       toFile<<right<<setw(14)<<me.clothinngEx;
-       toFile<<right<<setw(14)<<(mb.clothinng - me.clothinngEx)<<"\n";
+       toFile<<left<<setw(width1)<<"Clothing";
+       toFile<<right<<setw(width2)<<mb.clothinng;
+       toFile<<right<<setw(width1)<<me.clothinngEx;
+       toFile<<right<<setw(width1)<<(mb.clothinng - me.clothinngEx)<<"\n";
        
-       toFile<<left<<setw(14)<<"Miscellaneous";
-       toFile<<right<<setw(11)<<mb.misc;
-       toFile<<right<<setw(14)<<me.miscEx;
-       toFile<<right<<setw(14)<<(mb.misc - me.miscEx)<<"\n";
+       toFile<<left<<setw(width1)<<"Miscellaneous";
+       toFile<<right<<setw(width2)<<mb.misc;
+       toFile<<right<<setw(width1)<<me.miscEx;
+       toFile<<right<<setw(width1)<<(mb.misc - me.miscEx)<<"\n";
        toFile.close();
        
        expenseFile.read(reinterpret_cast<char*>(&me),sizeof(me));
