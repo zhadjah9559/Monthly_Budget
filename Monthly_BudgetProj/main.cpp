@@ -2,7 +2,7 @@
 Zachary Hadjah                    February 9th 2018
 Junior Year                       Data Structures/ Algorithm Analysis
 
-This program tracks the users monthly budget and their expenses in order to 
+This program tracks the user's monthly budget and their expenses in order to 
 calculate the over/under and tell the user whether they are within their
 budget.
 
@@ -38,7 +38,6 @@ struct MonthlyBudget
     double entertainment;
     double clothinng;
     double misc;
-    double total;
 };
 
 struct MonthlyExpenses
@@ -53,7 +52,6 @@ struct MonthlyExpenses
     double entertainmentEx;
     double clothinngEx;
     double miscEx;
-    double total;
 };
 
 //prototypes declared outside of main so main function logic isn't distorted
@@ -63,8 +61,9 @@ void getMonthlyBudget(fstream& budgetFile, int months);
 void getMonthlyExpenses(fstream& expenseFile, int months);
 void getMonthlyReport(fstream& budgetFile, fstream& expenseFile, int months);   
 
-/*
+/**
  * 
+ * @return 0
  */
 int main() 
 {
@@ -162,20 +161,14 @@ void getMonthlyBudget(fstream& budgetFile, int months)
         }while(months != 0);
     }
     
-    catch(int)
-    {
-        cout<<"Values must be positive";
-    }
-    
     catch(...)
     {
         cin.clear(); 
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
     
-        cout<<"Error values must be numeric.";
+        cout<<"Error, invalid input entered.";
     }
-    
-        
+            
     budgetFile.close();
 }
 
@@ -187,7 +180,7 @@ void getMonthlyBudget(fstream& budgetFile, int months)
 void getMonthlyExpenses(fstream& expenseFile, int months)
 {
     MonthlyExpenses me;
-    int count = 0;
+    int count = 1;
 
     
     expenseFile.open("expenses.bin", ios::out|ios::binary);
@@ -196,33 +189,45 @@ void getMonthlyExpenses(fstream& expenseFile, int months)
       cout<<"Could not open expenses.bin \n";
       system("read");
     }
+    try
+    {
+        do
+        {
+            cout<<"Enter your housing expenses for month "<<count<<":\n";
+            cin>>me.housingEx;
+            cout<<"Enter your utilities expenses for month "<<count<<":\n";
+            cin>>me.utilitesEx;
+            cout<<"Enter the cost of your house hold expenses for month "<<count<<":\n";
+            cin>>me.householdEx;
+            cout<<"Enter your transportation expenses for month "<<count<<":\n";
+            cin>>me.transportationEx;
+            cout<<"Enter your food expenses for month "<<count<<":\n";
+            cin>>me.foodEx;
+            cout<<"Enter your medical expenses for month "<<count<<":\n";
+            cin>>me.medicalEx;
+            cout<<"Enter your insurance expenses for month "<<count<<":\n";
+            cin>>me.insuranceEx;
+            cout<<"Enter your entertainment expenses for month "<<count<<":\n";
+            cin>>me.entertainmentEx;
+            cout<<"Enter your clothing expenses for month "<<count<<":\n";
+            cin>>me.clothinngEx;
+            cout<<"Enter your Miscellaneous expenses for month "<<count<<":\n";
+            cin>>me.miscEx;    
+
+            expenseFile.write(reinterpret_cast<char*>(&me),sizeof(me));
+            count++;	
+            months--;	
+        }while(months!=0);  
+    }
     
-    do{
-        cout<<"Enter your housing expenses for month "<<count<<":\n";
-        cin>>me.housingEx;
-        cout<<"Enter your utilities expenses for month "<<count<<":\n";
-        cin>>me.utilitesEx;
-        cout<<"Enter the cost of your house hold expenses for month "<<count<<":\n";
-        cin>>me.householdEx;
-        cout<<"Enter your transportation expenses for month "<<count<<":\n";
-        cin>>me.transportationEx;
-        cout<<"Enter your food expenses for month "<<count<<":\n";
-        cin>>me.foodEx;
-        cout<<"Enter your medical expenses for month "<<count<<":\n";
-        cin>>me.medicalEx;
-        cout<<"Enter your insurance expenses for month "<<count<<":\n";
-        cin>>me.insuranceEx;
-        cout<<"Enter your entertainment expenses for month "<<count<<":\n";
-        cin>>me.entertainmentEx;
-        cout<<"Enter your clothing expenses for month "<<count<<":\n";
-        cin>>me.clothinngEx;
-        cout<<"Enter your Miscellaneous expenses for month "<<count<<":\n";
-        cin>>me.miscEx;    
+    catch(...)
+    {
+        cin.clear(); 
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
+        cout<<"Error, invalid input entered.";
+    }
         
-        expenseFile.write(reinterpret_cast<char*>(&me),sizeof(me));
-        count++;	
-        months--;	
-    }while(months!=0);
     expenseFile.close();
 }
 
@@ -237,7 +242,7 @@ void getMonthlyReport(fstream& budgetFile, fstream& expenseFile, int months)
     MonthlyBudget mb;
     MonthlyExpenses me;
     ofstream toFile;
-        
+            
     budgetFile.open("budget.bin", ios::in|ios::binary);
     if(budgetFile.fail()){
         cout<<"Could not open budget.bin";
@@ -255,128 +260,137 @@ void getMonthlyReport(fstream& budgetFile, fstream& expenseFile, int months)
     while(  !expenseFile.eof() && !budgetFile.eof()  )
     {
        //displaying info to screen 
-       cout<<fixed<<showpoint<<setprecision(1);
+       cout<<fixed<<showpoint<<setprecision(2);
        cout<<"--------------------------------------------------------------------\n";
        cout<<left<<setw(14)<<"Category";
-       cout<<right<<setw(7)<<"Budget";
-       cout<<right<<setw(10)<<"Spent";
-       cout<<right<<setw(15)<<"   Over(-)/Under \n";
+       cout<<right<<setw(11)<<"Budget";
+       cout<<right<<setw(14)<<"Spent";
+       cout<<right<<setw(19)<<"   Over(-)/Under \n";
        cout<<"--------------------------------------------------------------------\n";
       
        cout<<left<<setw(14)<<"Housing";
-       cout<<right<<setw(7)<<mb.housing;
-       cout<<right<<setw(10)<<me.housingEx;
-       cout<<right<<setw(10)<<(mb.housing - me.housingEx)<<"\n";
+       cout<<right<<setw(11)<<mb.housing;
+       cout<<right<<setw(14)<<me.housingEx;
+       cout<<right<<setw(14)<<(mb.housing - me.housingEx)<<"\n";
        
        cout<<left<<setw(14)<<"Utilities";
-       cout<<right<<setw(7)<<mb.utilites;
-       cout<<right<<setw(10)<<me.utilitesEx;
-       cout<<right<<setw(10)<<(mb.utilites - me.utilitesEx)<<"\n";
+       cout<<right<<setw(11)<<mb.utilites;
+       cout<<right<<setw(14)<<me.utilitesEx;
+       cout<<right<<setw(14)<<(mb.utilites - me.utilitesEx)<<"\n";
        
        cout<<left<<setw(14)<<"House Hold";
-       cout<<right<<setw(7)<<mb.houseHold;
-       cout<<right<<setw(10)<<me.householdEx;
-       cout<<right<<setw(10)<<(mb.houseHold - me.householdEx)<<"\n";
+       cout<<right<<setw(11)<<mb.houseHold;
+       cout<<right<<setw(14)<<me.householdEx;
+       cout<<right<<setw(14)<<(mb.houseHold - me.householdEx)<<"\n";
        
        cout<<left<<setw(14)<<"Transportation";
-       cout<<right<<setw(7)<<mb.transportation;
-       cout<<right<<setw(10)<<me.transportationEx;
-       cout<<right<<setw(10)<<(mb.transportation - me.transportationEx)<<"\n";
+       cout<<right<<setw(11)<<mb.transportation;
+       cout<<right<<setw(14)<<me.transportationEx;
+       cout<<right<<setw(14)<<(mb.transportation - me.transportationEx)<<"\n";
                
        cout<<left<<setw(14)<<"Food";
-       cout<<right<<setw(7)<<mb.food;
-       cout<<right<<setw(10)<<me.foodEx;
-       cout<<right<<setw(10)<<(mb.food - me.foodEx)<<"\n";
+       cout<<right<<setw(11)<<mb.food;
+       cout<<right<<setw(14)<<me.foodEx;
+       cout<<right<<setw(14)<<(mb.food - me.foodEx)<<"\n";
        
        cout<<left<<setw(14)<<"Medical";
-       cout<<right<<setw(7)<<mb.medical;
-       cout<<right<<setw(10)<<me.medicalEx;
-       cout<<right<<setw(10)<<(mb.medical - me.medicalEx)<<"\n";
+       cout<<right<<setw(11)<<mb.medical;
+       cout<<right<<setw(14)<<me.medicalEx;
+       cout<<right<<setw(14)<<(mb.medical - me.medicalEx)<<"\n";
        
        cout<<left<<setw(14)<<"Insurance";
-       cout<<right<<setw(7)<<mb.insurance;
-       cout<<right<<setw(10)<<me.insuranceEx;
-       cout<<right<<setw(10)<<(mb.insurance - me.insuranceEx)<<"\n";
+       cout<<right<<setw(11)<<mb.insurance;
+       cout<<right<<setw(14)<<me.insuranceEx;
+       cout<<right<<setw(14)<<(mb.insurance - me.insuranceEx)<<"\n";
        
        cout<<left<<setw(14)<<"Entertainment";
-       cout<<right<<setw(7)<<mb.entertainment;
-       cout<<right<<setw(10)<<me.entertainmentEx;
-       cout<<right<<setw(10)<<(mb.entertainment - me.entertainmentEx)<<"\n";
+       cout<<right<<setw(11)<<mb.entertainment;
+       cout<<right<<setw(14)<<me.entertainmentEx;
+       cout<<right<<setw(14)<<(mb.entertainment - me.entertainmentEx)<<"\n";
        
        cout<<left<<setw(14)<<"Clothing";
-       cout<<right<<setw(7)<<mb.clothinng;
-       cout<<right<<setw(10)<<me.clothinngEx;
-       cout<<right<<setw(10)<<(mb.clothinng - me.clothinngEx)<<"\n";
+       cout<<right<<setw(11)<<mb.clothinng;
+       cout<<right<<setw(14)<<me.clothinngEx;
+       cout<<right<<setw(14)<<(mb.clothinng - me.clothinngEx)<<"\n";
        
        cout<<left<<setw(14)<<"Miscellaneous";
-       cout<<right<<setw(7)<<mb.misc;
-       cout<<right<<setw(10)<<me.miscEx;
-       cout<<right<<setw(10)<<(mb.misc - me.miscEx)<<"\n";
-                     
+       cout<<right<<setw(11)<<mb.misc;
+       cout<<right<<setw(14)<<me.miscEx;
+       cout<<right<<setw(14)<<(mb.misc - me.miscEx)<<"\n";
+                 
+       cout<<"For the month you are over budget by $"<<
+            (mb.housing + mb.utilites + mb.houseHold + mb.transportation + mb.food +
+             mb.medical + mb.insurance + mb.entertainment + mb.clothinng + mb.misc)
+             -
+            (me.housingEx + me.utilitesEx + me.householdEx + me.transportationEx
+             + me.foodEx + me.medicalEx + me.insuranceEx + me.entertainmentEx + 
+             me.clothinngEx + me.miscEx )<<"\n";
+      
        //writing to text file
        toFile.open("results.txt",ios::app);
-       toFile<<fixed<<showpoint<<setprecision(1);
+       toFile<<fixed<<showpoint<<setprecision(2);
        toFile<<"--------------------------------------------------------------------\n";
        toFile<<left<<setw(14)<<"Category";
-       toFile<<right<<setw(7)<<"Budget";
-       toFile<<right<<setw(10)<<"Spent";
-       toFile<<right<<setw(15)<<"   Over(-)/Under \n";
+       toFile<<right<<setw(11)<<"Budget";
+       toFile<<right<<setw(14)<<"Spent";
+       toFile<<right<<setw(19)<<"   Over(-)/Under \n";
        toFile<<"--------------------------------------------------------------------\n";
       
        toFile<<left<<setw(14)<<"Housing";
-       toFile<<right<<setw(7)<<mb.housing;
-       toFile<<right<<setw(10)<<me.housingEx;
-       toFile<<right<<setw(10)<<(mb.housing - me.housingEx)<<"\n";
+       toFile<<right<<setw(11)<<mb.housing;
+       toFile<<right<<setw(14)<<me.housingEx;
+       toFile<<right<<setw(14)<<(mb.housing - me.housingEx)<<"\n";
        
        toFile<<left<<setw(14)<<"Utilities";
-       toFile<<right<<setw(7)<<mb.utilites;
-       toFile<<right<<setw(10)<<me.utilitesEx;
-       toFile<<right<<setw(10)<<(mb.utilites - me.utilitesEx)<<"\n";
+       toFile<<right<<setw(11)<<mb.utilites;
+       toFile<<right<<setw(14)<<me.utilitesEx;
+       toFile<<right<<setw(14)<<(mb.utilites - me.utilitesEx)<<"\n";
        
        toFile<<left<<setw(14)<<"House Hold";
-       toFile<<right<<setw(7)<<mb.houseHold;
-       toFile<<right<<setw(10)<<me.householdEx;
-       toFile<<right<<setw(10)<<(mb.houseHold - me.householdEx)<<"\n";
+       toFile<<right<<setw(11)<<mb.houseHold;
+       toFile<<right<<setw(14)<<me.householdEx;
+       toFile<<right<<setw(14)<<(mb.houseHold - me.householdEx)<<"\n";
        
        toFile<<left<<setw(14)<<"Transportation";
-       toFile<<right<<setw(7)<<mb.transportation;
-       toFile<<right<<setw(10)<<me.transportationEx;
-       toFile<<right<<setw(10)<<(mb.transportation - me.transportationEx)<<"\n";
+       toFile<<right<<setw(11)<<mb.transportation;
+       toFile<<right<<setw(14)<<me.transportationEx;
+       toFile<<right<<setw(14)<<(mb.transportation - me.transportationEx)<<"\n";
                
        toFile<<left<<setw(14)<<"Food";
-       toFile<<right<<setw(7)<<mb.food;
-       toFile<<right<<setw(10)<<me.foodEx;
-       toFile<<right<<setw(10)<<(mb.food - me.foodEx)<<"\n";
+       toFile<<right<<setw(11)<<mb.food;
+       toFile<<right<<setw(14)<<me.foodEx;
+       toFile<<right<<setw(14)<<(mb.food - me.foodEx)<<"\n";
        
        toFile<<left<<setw(14)<<"Medical";
-       toFile<<right<<setw(7)<<mb.medical;
-       toFile<<right<<setw(10)<<me.medicalEx;
-       toFile<<right<<setw(10)<<(mb.medical - me.medicalEx)<<"\n";
+       toFile<<right<<setw(11)<<mb.medical;
+       toFile<<right<<setw(14)<<me.medicalEx;
+       toFile<<right<<setw(14)<<(mb.medical - me.medicalEx)<<"\n";
        
        toFile<<left<<setw(14)<<"Insurance";
-       toFile<<right<<setw(7)<<mb.insurance;
-       toFile<<right<<setw(10)<<me.insuranceEx;
-       toFile<<right<<setw(10)<<(mb.insurance - me.insuranceEx)<<"\n";
+       toFile<<right<<setw(11)<<mb.insurance;
+       toFile<<right<<setw(14)<<me.insuranceEx;
+       toFile<<right<<setw(14)<<(mb.insurance - me.insuranceEx)<<"\n";
        
        toFile<<left<<setw(14)<<"Entertainment";
-       toFile<<right<<setw(7)<<mb.entertainment;
-       toFile<<right<<setw(10)<<me.entertainmentEx;
-       toFile<<right<<setw(10)<<(mb.entertainment - me.entertainmentEx)<<"\n";
+       toFile<<right<<setw(11)<<mb.entertainment;
+       toFile<<right<<setw(14)<<me.entertainmentEx;
+       toFile<<right<<setw(14)<<(mb.entertainment - me.entertainmentEx)<<"\n";
        
        toFile<<left<<setw(14)<<"Clothing";
-       toFile<<right<<setw(7)<<mb.clothinng;
-       toFile<<right<<setw(10)<<me.clothinngEx;
-       toFile<<right<<setw(10)<<(mb.clothinng - me.clothinngEx)<<"\n";
+       toFile<<right<<setw(11)<<mb.clothinng;
+       toFile<<right<<setw(14)<<me.clothinngEx;
+       toFile<<right<<setw(14)<<(mb.clothinng - me.clothinngEx)<<"\n";
        
        toFile<<left<<setw(14)<<"Miscellaneous";
-       toFile<<right<<setw(7)<<mb.misc;
-       toFile<<right<<setw(10)<<me.miscEx;
-       toFile<<right<<setw(10)<<(mb.misc - me.miscEx)<<"\n";
+       toFile<<right<<setw(11)<<mb.misc;
+       toFile<<right<<setw(14)<<me.miscEx;
+       toFile<<right<<setw(14)<<(mb.misc - me.miscEx)<<"\n";
        toFile.close();
        
        expenseFile.read(reinterpret_cast<char*>(&me),sizeof(me));
        budgetFile.read(reinterpret_cast<char*>(&mb),sizeof(mb));       
     }
+    
     budgetFile.close();
     expenseFile.close();
 }
