@@ -136,6 +136,8 @@ void getMonthlyBudget(fstream& budgetFile, int months)
     {
         do
         {
+            cin.exceptions(std::ios::failbit);  //when the failbit is set on cin, std::ios_base::failure is thrown
+            
             cout<<"Enter your housing budget for month "<<count<<":\n";
             cin>>mb.housing;
             cout<<"Enter your utilities budget for month "<<count<<":\n";
@@ -168,7 +170,7 @@ void getMonthlyBudget(fstream& budgetFile, int months)
         cin.clear(); 
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
     
-        cout<<"Error, invalid input entered.";
+        cout<<"Error, invalid input entered. \n";
     }
             
     budgetFile.close();
@@ -194,6 +196,8 @@ void getMonthlyExpenses(fstream& expenseFile, int months)
     {
         do
         {
+            cin.exceptions(std::ios::failbit); 
+
             cout<<"Enter your housing expenses for month "<<count<<":\n";
             cin>>me.housingEx;
             cout<<"Enter your utilities expenses for month "<<count<<":\n";
@@ -226,7 +230,7 @@ void getMonthlyExpenses(fstream& expenseFile, int months)
         cin.clear(); 
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
     
-        cout<<"Error, invalid input entered.";
+        cout<<"Error, invalid input entered. \n";
     } 
     expenseFile.close();
 }
@@ -395,8 +399,3 @@ void getMonthlyReport(fstream& budgetFile, fstream& expenseFile, int months)
     budgetFile.close();
     expenseFile.close();
 }
-
-
-
-
-
