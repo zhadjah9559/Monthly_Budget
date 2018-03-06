@@ -97,12 +97,13 @@ void describeProgram()
  */
 void getMonths(int& months)
 {
-    cout<<"How many months would you like to have analyzed? ";
+    cout<<"How many months would you like to have analyzed? \n";
     cin>>months;  
     
     while(months <=0 || months >=13)
     {
-        cout<<"Please enter input between 1 - 12";
+        cout<<"Please enter input between 1 - 12 \n";
+        cin>>months;
     }
     
     while(cin.fail())
@@ -263,7 +264,7 @@ void getMonthlyReport(fstream& budgetFile, fstream& expenseFile, int months)
        cout<<fixed<<showpoint<<setprecision(2);
        cout<<"--------------------------------------------------------------------\n";
        cout<<left<<setw(width1)<<"Category";
-       cout<<right<<setw(width2)<<"Budget";
+       cout<<right<<setw(width2)<<"Budgeted";
        cout<<right<<setw(width1)<<"Spent";
        cout<<right<<setw(width1)<<"   Over(-)/Under \n";
        cout<<"--------------------------------------------------------------------\n";
@@ -318,20 +319,20 @@ void getMonthlyReport(fstream& budgetFile, fstream& expenseFile, int months)
        cout<<right<<setw(width1)<<me.miscEx;
        cout<<right<<setw(width1)<<(mb.misc - me.miscEx)<<"\n";
                  
-       cout<<"For the month you are over budget by $"<<
-            (mb.housing + mb.utilites + mb.houseHold + mb.transportation + mb.food +
-             mb.medical + mb.insurance + mb.entertainment + mb.clothinng + mb.misc)
-             -
+       cout<<"For the month you are over budget by $"<<          
             (me.housingEx + me.utilitesEx + me.householdEx + me.transportationEx
              + me.foodEx + me.medicalEx + me.insuranceEx + me.entertainmentEx + 
-             me.clothinngEx + me.miscEx )<<"\n";
+             me.clothinngEx + me.miscEx )
+            -   
+            (mb.housing + mb.utilites + mb.houseHold + mb.transportation + mb.food +
+             mb.medical + mb.insurance + mb.entertainment + mb.clothinng + mb.misc)<<"\n";
       
        //writing to text file
        toFile.open("results.txt",ios::app);
        toFile<<fixed<<showpoint<<setprecision(2);
        toFile<<"--------------------------------------------------------------------\n";
        toFile<<left<<setw(width1)<<"Category";
-       toFile<<right<<setw(width2)<<"Budget";
+       toFile<<right<<setw(width2)<<"Budgeted";
        toFile<<right<<setw(width1)<<"Spent";
        toFile<<right<<setw(19)<<"   Over(-)/Under \n";
        toFile<<"--------------------------------------------------------------------\n";
